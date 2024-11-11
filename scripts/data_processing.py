@@ -57,6 +57,48 @@ def seasonality(df,ticker):
     ticker_decomposition.plot()
     plt.show()
 
+
+
+
+def detect_outlier(daily_returns,ticker):
+    '''
+        detecting outliers from the daily returns for each ticker
+        input: daily returns 
+             : ticker
+             
+    '''
+    
+    # Detect outliers for each ticker
+    threshold = 3  # Z-score threshold for outlier detection
+
+    mean_return = daily_returns[ticker].mean()
+    std_return = daily_returns[ticker].std()
+    
+    # Calculate Z-scores
+    z_scores = (daily_returns[ticker] - mean_return) / std_return
+    
+    # Identify outliers
+    outliers = daily_returns[(z_scores > threshold) | (z_scores < -threshold)][[ticker]]
+    # outlier_days[ticker] = outliers
+
+    #  Visualize daily daily_returns and outliers for each ticker
+    plt.figure(figsize=(14, 7))
+    sns.lineplot(data=daily_returns[ticker], label='Daily Return', color='blue')
+    plt.scatter(outliers.index, outliers, color='red', s=100, label='Outliers')
+    plt.title(f'Daily daily_returns for {ticker} with Outliers Highlighted')
+    plt.xlabel('Date')
+    plt.ylabel('Daily Return')
+    plt.axhline(y=0, color='black', linestyle='--')
+    plt.legend()
+    plt.show()
+
+    #  Analyze the outliers
+    # for ticker, outliers in outlier_days.items():
+    print(f"\nOutlier Days for {ticker}:")
+    print(outliers)
+        
+
+
 def df_description(dfs):
     """
     Loop over a list of DataFrames and print description.

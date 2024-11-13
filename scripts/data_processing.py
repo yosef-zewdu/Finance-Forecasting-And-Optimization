@@ -30,7 +30,7 @@ def load_data(ticker):
     logging.info(f"Data loaded ")
     return df
 
-def daily_return(ticker):
+def daily_return(data,ticker):
     '''
         daily percentage return for yfinance time series data
     '''

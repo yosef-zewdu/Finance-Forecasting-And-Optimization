@@ -30,6 +30,36 @@ def load_data(ticker):
     logging.info(f"Data loaded ")
     return df
 
+
+# Load Data 
+def load_close_data(ticker):
+    ''' 
+    Function to Load Closing price Data from yfinance using ticker names
+
+    '''
+    logging.info(f"Loading {ticker} data...")
+    
+    start_date = '2015-01-01'
+    end_date = '2024-10-31'
+    df = yf.download(ticker, start=start_date, end=end_date)['Close']
+    if isinstance(ticker, list):
+        # If ticker is a list, do not change column names
+        logging.info(f"Data loaded for multiple tickers: {ticker}")
+    else:
+        if ticker in ['tsla','bnd', 'spy']:
+            df.columns = ['Price']
+    logging.info(f"Data loaded ")
+    
+    return df 
+def save_file(df,ticker):
+    df.to_csv(f'../data/{ticker}.csv', index=True)
+
+def read_file(ticker):
+    df = pd.read_csv(f'../data/{ticker}.csv')
+    df['Date'] = pd.to_datetime(df['Date'])
+    df.set_index('Date', inplace=True)
+    return df 
+
 def daily_return(data,ticker):
     '''
         daily percentage return for yfinance time series data
